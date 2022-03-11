@@ -1,25 +1,23 @@
 # Laravel Stripe Connect
 
-[![Packagist](https://img.shields.io/packagist/v/rap2hpoutre/laravel-stripe-connect.svg)]()
-[![Packagist](https://img.shields.io/packagist/l/rap2hpoutre/laravel-stripe-connect.svg)](https://packagist.org/packages/rap2hpoutre/laravel-stripe-connect)
-[![Build Status](https://travis-ci.org/rap2hpoutre/laravel-stripe-connect.svg?branch=master)](https://travis-ci.org/rap2hpoutre/laravel-stripe-connect)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-stripe-connect/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-stripe-connect/?branch=master)
+With Laravel Stripe Connect, you can start your own marketplace platform using [Stripe Connect](https://stripe.com/connect)
+which allows you to make transfers to your recipients directly from your Stripe account to theirs.
 
-⚠️ _Deprecated, looking for a competitor. See this [reddit post](https://www.reddit.com/r/laravel/comments/avdki2/is_there_an_alternative_to_laravelstripeconnect/)._
+Laravel Stripe Connect provides a starting point to help you get your users set up and connected to your Stripe account
+and start making payouts in no time.
 
-> Marketplaces and platforms use Stripe Connect to accept money and pay out to third parties. Connect provides a complete set of building blocks to support virtually any business model, including on-demand businesses, e‑commerce, crowdfunding, fintech, and travel and events. 
-
-Create a marketplace application with this helper for [Stripe Connect](https://stripe.com/connect).
+> This package assumes that your `User` model is what will represent recipients of transfers from your platform,
+> however this can be changed.
 
 ## Installation
 
-Install via composer
+Install via Composer:
 
 ```
-composer require rap2hpoutre/laravel-stripe-connect
+composer require simonhamp/laravel-stripe-connect
 ```
 
-Add your stripe credentials in `.env`:
+Add your Stripe credentials in `.env`:
 
 ```
 STRIPE_KEY=pk_test_XxxXXxXXX
@@ -32,65 +30,48 @@ Run migrations:
 php artisan migrate
 ```
 
-## Usage
+> ⚠️ If you intend to use a table other than your `users` table to record your recipients' Stripe account
+> details, publish the migration by running `php artisan vendor:publish` and select the appropriate
+> options. You can then edit the published migration in your app's `database/migrations` folder.
 
-You can make a single payment from a user to another user
- or save a customer card for later use. Just remember to
- import the base class via:
+## Usage
+Add the `Payable` trait to any model that you consider to represent your recipient.
  
 ```php
-use Rap2hpoutre\LaravelStripeConnect\StripeConnect;
+use SimonHamp\LaravelStripeConnect\Traits\Payable;
+
+class User extends Model
+{
+    use Payable;
 ```
 
-### Example #1: direct charge
+Then you can use the convenient methods available to get your recipients to set up or connect their
+Stripe account to your platform.
 
-The customer gives his credentials via Stripe Checkout and is charged.
-It's a one shot process. `$customer` and `$vendor` must be `User` instances. The `$token` must have been created using [Checkout](https://stripe.com/docs/checkout/tutorial) or [Elements](https://stripe.com/docs/stripe-js).
+Here's an example route that will get your user to go through the Stripe Connect onboarding flow:
 
 ```php
-StripeConnect::transaction($token)
-    ->amount(1000, 'usd')
-    ->from($customer)
-    ->to($vendor)
-    ->create(); 
+Route::get('/connect', function () {
+    if (! auth()->user()->getStripeAccountId()) {
+        auth()->user()->createStripeAccount(['type' => 'express']);
+    }
+
+    if (! auth()->user()->isStripeAccountActive()) {
+        return redirect(auth()->user()->getStripeAccountLink());
+    }
+
+    return redirect('dashboard');
+})->middleware(['auth']);
 ```
 
-### Example #2: save a customer then charge later
-
-Sometimes, you may want to register a card then charge later.
-First, create the customer.
+Once a user's Stripe account is all connected and active, you can start sending them payments:
 
 ```php
-StripeConnect::createCustomer($token, $customer);
+auth()->user()->pay(10000, 'usd');
 ```
 
-Then, (later) charge the customer without token.
+> Remember: Stripe expects amounts in the smallest denomination for the currency (in this case, cents),
+> so the above is a transfer of US$100 to the logged in user.
 
-```php
-StripeConnect::transaction()
-    ->amount(1000, 'usd')
-    ->useSavedCustomer()
-    ->from($customer)
-    ->to($vendor)
-    ->create(); 
-```
-
-### Exemple #3: create a vendor account
-
-You may want to create the vendor account before charging anybody.
-Just call `createAccount` with a `User` instance.
-
-```php
-StripeConnect::createAccount($vendor);
-```
-
-### Exemple #4: Charge with application fee
-
-```php
-StripeConnect::transaction($token)
-    ->amount(1000, 'usd')
-    ->fee(50)
-    ->from($customer)
-    ->to($vendor)
-    ->create(); 
-```
+If you found this package useful, please consider supporting my Open Source work by
+[sponsoring me](https://github.com/sponsors/simonhamp).
