@@ -3,6 +3,8 @@
 namespace SimonHamp\LaravelStripeConnect\Traits;
 
 use Stripe\Account;
+use Stripe\Balance;
+use Stripe\Transfer;
 use Stripe\StripeClient;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
@@ -67,12 +69,20 @@ trait Payable
         return $link->url;
     }
 
-    public function pay($amount, $currency)
+    public function pay($amount, $currency): Transfer
     {
+        // TODO: capture this in the database, which may allow us to do a reversal later
         return static::$stripe->transfers->create([
             'amount' => $amount,
             'currency' => $currency,
             'destination' => $this->getStripeAccountId(),
+        ]);
+    }
+
+    public function getAccountBalance(): Balance
+    {
+        return static::$stripe->balance->retrieve([
+            'stripe_account' => $this->getStripeAccountId(),
         ]);
     }
 
