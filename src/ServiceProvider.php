@@ -30,7 +30,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function configure()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/stripe_connect.php.php',
+            __DIR__.'/../config/stripe_connect.php',
             'stripe_connect'
         );
     }
