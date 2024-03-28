@@ -12,8 +12,8 @@ Route::get('return', function () {
         ->setStripeAccountStatus($account->details_submitted)
         ->save();
 
-    return Route::has(Config::get('stripe_connect.routes.complete'))
-        ? Response::redirectToRoute(Config::get('stripe_connect.routes.complete'))
+    return Route::has(Config::get('stripe_connect.routes.account.complete'))
+        ? Response::redirectToRoute(Config::get('stripe_connect.routes.account.complete'))
         : Response::redirectTo('/');
 })->name('return');
 
