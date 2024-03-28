@@ -9,6 +9,18 @@ and start making payouts in no time.
 > This package assumes that your `User` model is what will represent recipients of transfers from your platform,
 > however this can be changed.
 
+## Sponsorship
+Laravel Stripe Connect is completely free to use for personal or commercial use. If it's making your job easier or you just want to
+make sure it keeps being supported and improved, I'd really appreciate your donations!
+
+[Donate now via GitHub Sponsors](https://github.com/sponsors/simonhamp)
+
+Thank you 🙏
+
+## Sponsors
+
+[Laradir](https://laradir.com/?ref=laravel-stripe-connect-github) - Connecting the best Laravel Developers with the best Laravel Teams
+
 ## Installation
 
 Install via Composer:
@@ -72,6 +84,3 @@ auth()->user()->pay(10000, 'usd');
 
 > Remember: Stripe expects amounts in the smallest denomination for the currency (in this case, cents),
 > so the above is a transfer of US$100 to the logged in user.
-
-If you found this package useful, please consider supporting my Open Source work by
-[sponsoring me](https://github.com/sponsors/simonhamp).
