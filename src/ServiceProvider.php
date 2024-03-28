@@ -49,7 +49,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function registerMigrations()
     {
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__.'/../migrations');
         }
     }
 
@@ -61,7 +61,7 @@ class ServiceProvider extends BaseServiceProvider
             ], 'stripe-connect-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
+                __DIR__.'/../migrations' => $this->app->databasePath('migrations'),
             ], 'stripe-connect-migrations');
         }
     }
