@@ -64,7 +64,7 @@ trait Payable
                 'account' => $this->getStripeAccountId(),
                 'refresh_url' => URL::route(Config::get('stripe_connect.routes.account.refresh')),
                 'return_url' => URL::route(Config::get('stripe_connect.routes.account.return')),
-                'type' => $type,
+                'type' => $type->value,
             ]
         );
 
