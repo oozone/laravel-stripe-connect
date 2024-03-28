@@ -2,14 +2,16 @@
 
 namespace SimonHamp\LaravelStripeConnect\Traits;
 
+
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
+use SimonHamp\LaravelStripeConnect\Enums\LinkType;
+use SimonHamp\LaravelStripeConnect\Interfaces\StripeConnect;
 use Stripe\Account;
 use Stripe\Balance;
 use Stripe\Transfer;
 use Stripe\StripeClient;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
-use SimonHamp\LaravelStripeConnect\Interfaces\StripeConnect;
 
 trait Payable
 {
@@ -55,14 +57,14 @@ trait Payable
     /**
      * Get the redirect URL needed to take this account through Stripe's onboarding flow
      */
-    public function getStripeAccountLink($type = 'account_onboarding'): string
+    public function getStripeAccountLink(LinkType $type = LinkType::Onboarding): string
     {
         $link = static::$stripe->accountLinks->create(
             [
                 'account' => $this->getStripeAccountId(),
                 'refresh_url' => URL::route(Config::get('stripe_connect.routes.account.refresh')),
                 'return_url' => URL::route(Config::get('stripe_connect.routes.account.return')),
-                'type' => 'account_onboarding',
+                'type' => $type,
             ]
         );
 
@@ -86,6 +88,13 @@ trait Payable
         ]);
     }
 
+    public function setStripeAccountStatus($status)
+    {
+        $this->{$this->getStripeAccountStatusColumn()} = $status;
+
+        return $this;
+    }
+
     protected function getStripeAccountIdColumn()
     {
         return Config::get('stripe_connect.payable.account_id_column');
@@ -101,12 +110,5 @@ trait Payable
     protected function getStripeAccountStatusColumn()
     {
         return Config::get('stripe_connect.payable.account_status_column');
-    }
-
-    protected function setStripeAccountStatus($status)
-    {
-        $this->{$this->getStripeAccountStatusColumn()} = $status;
-
-        return $this;
     }
 }
