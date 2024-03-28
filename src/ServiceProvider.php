@@ -37,13 +37,12 @@ class ServiceProvider extends BaseServiceProvider
 
     protected function registerRoutes()
     {
-        Route::group([
-            'prefix' => 'stripe-connect',
-            'as' => 'stripe-connect.',
-            'middleware' => 'auth',
-        ], function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        });
+        Route::middleware(['web', 'auth'])
+            ->as('stripe-connect.')
+            ->prefix('stripe-connect')
+            ->group(function () {
+                $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+            });
     }
 
     protected function registerMigrations()
