@@ -9,6 +9,7 @@ which allows you to make transfers to your recipients directly from your Stripe 
 Laravel Stripe Connect provides a starting point to help you get your users set up and connected to your Stripe account
 and start making payouts in no time.
 
+> [!TIP]
 > This package assumes that your `User` model is what will represent recipients of transfers from your platform,
 > however this can be changed.
 
@@ -45,7 +46,8 @@ Run migrations:
 php artisan migrate
 ```
 
-> ⚠️ If you intend to use a table other than your `users` table to record your recipients' Stripe account
+> [!IMPORTANT]
+> If you intend to use a table other than your `users` table to record your recipients' Stripe account
 > details, publish the migration by running `php artisan vendor:publish` and select the appropriate
 > options. You can then edit the published migration in your app's `database/migrations` folder.
 
@@ -85,5 +87,6 @@ Once a user's Stripe account is all connected and active, you can start sending 
 auth()->user()->pay(10000, 'usd');
 ```
 
-> Remember: Stripe expects amounts in the smallest denomination for the currency (in this case, cents),
+> [!NOTE]
+> Stripe expects amounts in the smallest denomination for the currency (in this case, cents),
 > so the above is a transfer of US$100 to the logged in user.
