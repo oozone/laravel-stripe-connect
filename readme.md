@@ -23,7 +23,11 @@ Thank you 🙏
 
 ## Sponsors
 
+![](https://avatars.githubusercontent.com/u/126668604?s=200&v=4)
 [Laradir](https://laradir.com/?ref=laravel-stripe-connect-github) - Connecting the best Laravel Developers with the best Laravel Teams
+
+![](https://avatars.githubusercontent.com/u/12368817?s=200&v=4)
+[quantumweb](https://quantumweb.co/?ref=simonhamp/laravel-stripe-connect-github)
 
 ## Installation
 
