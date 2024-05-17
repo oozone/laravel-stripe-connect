@@ -27,9 +27,9 @@ Thank you 🙏
 
 [Laradir](https://laradir.com/?ref=laravel-stripe-connect-github) - Connecting the best Laravel Developers with the best Laravel Teams
 
-![](https://avatars.githubusercontent.com/u/12368817?s=50&v=4) - A bare-metal web agency. Less layers, better results
+![](https://avatars.githubusercontent.com/u/12368817?s=50&v=4)
 
-[quantumweb](https://quantumweb.co/?ref=simonhamp/laravel-stripe-connect-github)
+[quantumweb](https://quantumweb.co/?ref=simonhamp/laravel-stripe-connect-github) - A bare-metal web agency. Less layers, better results
 
 ## Installation
 
