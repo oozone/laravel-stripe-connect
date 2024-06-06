@@ -90,7 +90,7 @@ Route::get('/connect', function () {
 Once a user's Stripe account is all connected and active, you can start sending them payments:
 
 ```php
-auth()->user()->pay(10000, 'usd');
+auth()->user()->transfer(10000, 'usd');
 ```
 
 > [!NOTE]
